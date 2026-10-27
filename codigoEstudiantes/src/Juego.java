@@ -6,10 +6,10 @@ public class Juego {
     public static final int CARTAS_POR_JUGADOR = 8;
     public static final Carta CARTA_INICIAL = new Carta(Palo.OROS, 5);
 
-    private Stack<Carta> mazo;
-    private List<Jugador> jugadores;
+    private Stack<Carta> mazo; //pila de cartas
+    private List<Jugador> jugadores; //lista de jugadores
     private int turno;
-    private Mesa mesa;
+    private Mesa mesa; //mesa
     private Scanner in;     // único Scanner sobre System.in; se crea al leer por primera vez
 
 
@@ -31,15 +31,80 @@ public class Juego {
     }
 
     private void validarJugadores(List<Jugador> jugadores) {
+        //la lista no puede ser null
+        if (jugadores == null) {
+            throw new IllegalArgumentException("Lista vacía");
 
+        } else if (jugadores.size() < MIN_JUGADORES || jugadores.size() > MAX_JUGADORES) {
+            //no puede haber menos de minimo ni max de jug
+            throw new IllegalArgumentException("Cnatidad de jugadores no válida");
+
+        } else {
+
+            //comprobar si algún jugador es null
+            boolean jugadorNull = false;
+
+            //comprobar que no se repiten los nombres
+            Set<String> nombresJugadores = new HashSet<>();
+
+            for (Jugador j : jugadores) {
+
+                //ningun jugador puede ser null
+                if (j.getNombre() == null) {
+                    throw new IllegalArgumentException("Nombre de jugador - null - no permitido");
+
+                }
+
+                //no puede haber jugadores con el nombre repetido
+                if (!nombresJugadores.contains(j.getNombre())) {
+                    nombresJugadores.add(j.getNombre());
+                } else {
+                    throw new IllegalArgumentException("Jugadores con el mismo nombre");
+                }
+            }
+        }
     }
 
     private List<Carta> crearBarajaSinCartaInicial() {
+        List<Carta> baraja = new ArrayList<>();
 
-        return null;
+        //Generar la baraja por palo y por número
+        for (Palo p : Palo.values()) { //por palo
+
+            //por número
+            for (int i = 1; i <= 12; i++) {
+
+                if (i != 8 && i != 9) { // Ignorar 8 y 9
+                    baraja.add(new Carta(p, i));
+                }
+            }
+        }
+
+        // Eliminar el 5 de Oros
+        baraja.remove(new Carta(Palo.OROS, 5));
+
+        return baraja;
     }
     private void validarBaraja(List<Carta> baraja) {
+        //no puede ser null
+        if (baraja == null){
+            throw new IllegalArgumentException("La lista es null");
 
+        } else if (baraja.size() != 39) {
+            //debe de tener 39 cartas
+            throw new IllegalArgumentException("No tiene 39 cartas");
+        } else {
+            //no pueden estar repetidas
+            Set<Carta> vistos = new HashSet<>();
+
+            for (Carta c : baraja) {
+                if (!vistos.contains(c)) {
+                    vistos.add(c);
+                } else {
+                    throw new IllegalArgumentException("No pueden haber cartas repetidas");
+                }
+            }
+        }
     }
 
     private void iniciar(List<Jugador> jugadores, List<Carta> baraja) {
@@ -57,7 +122,10 @@ public class Juego {
 
 
     private void repartirCartas(List<Carta> baraja) {
+        for (Jugador j : jugadores) {
 
+
+        }
     }
 
     private void jugarCarta(Jugador jugador, Carta c) {
