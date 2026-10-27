@@ -56,7 +56,7 @@ public final class Carta implements Comparable<Carta> {
     public boolean esSiguienteDe(Carta otra) {
 
         //comprobar el palo y orden
-        if ((this.palo == otra.palo) && (this.getOrden() == (otra.getOrden() + 1))) {
+        if ((this.palo == otra.palo) && ((this.getOrden() + 1) == otra.getOrden())) {
             return true;
 
         } else {

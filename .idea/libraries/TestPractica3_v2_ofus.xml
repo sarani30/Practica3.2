@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="TestPractica3_v2_ofus">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/codigoEstudiantes/lib/TestPractica3_v2_ofus.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
