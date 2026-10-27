@@ -2,39 +2,78 @@ import java.util.*;
 
 public class Jugador {
     //parte privada completar
-    private String nombre;
+    private final String nombre;
+    private final Set<Carta> mano;
 
     public Jugador(String nombre) {
+
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nombre no válido");
+        } else {
+            this.nombre = nombre;
+            this.mano = new TreeSet<>();
+        }
 
     }
 
 
     public void recibir(Carta c) {
 
+        if (c == null) {
+            throw new IllegalArgumentException("La carta es null");
+        } else {
+            //añadir al set
+            this.mano.add(c);
+        }
     }
 
 
     public boolean eliminar(Carta c) {
-        return true;
+
+        if (c == null) {
+            throw new IllegalArgumentException("La carta es null");
+        } else if (!this.mano.contains(c)) {
+            return false; //comprobar si la carta está en la mano del jugador
+        } else {
+            //la carta está, la borramos
+            this.mano.remove(c);
+            return true;
+        }
+
     }
 
 
     public int numCartas() {
-        return 0;
+        return this.mano.size();
     }
 
     public List<Carta> getMano() {
-        return null;
+
+        List<Carta> listaMano = new ArrayList<>();
+        listaMano.addAll(mano);
+        return listaMano;
     }
 
     public boolean puedeJugar (Mesa mesa) {
 
+        for (Carta c : this.mano) {
+            if (mesa.puedeColocar(c)) {
+                return true; //mientras haya una que puede colocar, puede seguir jugando
+            }
+        }
         return false;
     }
 
     public List<Carta> cartasJugables (Mesa mesa) {
 
-        return null;
+        List<Carta> puedeJugar = new ArrayList<>();
+
+        for (Carta c : this.mano) {
+            if (mesa.puedeColocar(c)) {
+                puedeJugar.add(c);
+            }
+        }
+        return puedeJugar;
     }
 
 
