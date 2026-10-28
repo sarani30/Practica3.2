@@ -122,27 +122,120 @@ public class Juego {
 
 
     private void repartirCartas(List<Carta> baraja) {
-        for (Jugador j : jugadores) {
 
+        ListIterator<Carta> it = baraja.listIterator(); //iterador para las cartas
 
+        int n = 0; //rondas de cartas
+
+        while (it.hasNext() && n < CARTAS_POR_JUGADOR) {
+
+            //para cada jugador en una ronda, recibirá una carta, después se borrará de la baraja
+            for (Jugador j : jugadores) {
+
+                if (it.hasNext()) {
+                    j.recibir(it.next());
+                    it.remove(); // Borra la carta actual de la baraja
+                } else {
+                    break; // Se acabaron las cartas
+                }
+            }
+
+            n++; //todos los jugadores tienen una carta
         }
     }
 
     private void jugarCarta(Jugador jugador, Carta c) {
+        //jugar la carta
+        this.mesa.colocar(c);
 
+        //borrar de la mano del jugador
+        jugador.eliminar(c);
     }
 
 
     private boolean robarHastaColocar(Jugador jugador, boolean mostrarCartas) {
-        return false;
+        //robar cartas hasta que pueda colocar una o hasta que no queden más
+        //si no se puede jugar, se añade a la mano del jugador
+        //si mostrarCartas==true muestra las cartas robadas
+
+        //contador de cartas robadas
+        int robadas = 0;
+
+        boolean puedeJugar = false;
+        Carta cartaJugada = null;
+
+        while (!this.mazo.empty() && !puedeJugar) {
+            Carta c = this.mazo.pop(); //cogemos la primera de la pila
+
+            //incrementamos contador y añadimos a la lista
+            robadas++;
+
+            //MOSTRAR LA CARTA ROBADA
+            if (mostrarCartas) {
+                System.out.println(c.toString());
+            }
+
+            if (this.mesa.puedeColocar(c)) {
+                cartaJugada = c;
+                this.mesa.colocar(cartaJugada);
+                puedeJugar = true;
+
+            } else { //no se puede colocar
+                //se añade al mazo del jugador
+                jugador.recibir(c);
+
+            }
+        }
+
+        System.out.println("Número de cartas robadas: " + robadas);
+
+        if (puedeJugar) {
+            System.out.println("Carta jugada: " + cartaJugada.toString());
+            return true;
+        } else {
+            //si no puede jugar porque no quedan más cartas
+            return false;
+        }
+
     }
 
     private void pasarTurno(Jugador jugador) {
 
+        if (jugador.numCartas() > 0) {
+            turno = (turno + 1) % jugadores.size();
+        }
     }
 
 
     private void comprobarJugador (Jugador jugador) {
+
+        //comprobar que el jugador no es null
+        if (jugador == null)
+            throw new IllegalArgumentException("El jugador no puede ser null");
+
+        //que está en la partida actual
+        boolean encontrado = false;
+        for (Jugador j : jugadores) {
+            if (j == jugador) {
+                encontrado = true;
+                break;
+            }
+        }
+
+        if (!encontrado) {
+            throw new IllegalArgumentException("El jugador no está en la partida actual");
+
+        }
+
+        //la partida no ha acabado
+        if (getGanador() != null) {
+            throw new IllegalStateException("La partida ya ha terminado");
+        }
+
+        //es el turno del jugador
+        if (jugadores.get(turno) != jugador) {
+            throw new IllegalStateException("No es el turno de este jugador");
+        }
 
     }
 

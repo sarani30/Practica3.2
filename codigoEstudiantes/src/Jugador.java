@@ -93,7 +93,7 @@ public class Jugador {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
-                    return false;
+            return false;
         }
         return nombre.equals(((Jugador) o).nombre);
     }
